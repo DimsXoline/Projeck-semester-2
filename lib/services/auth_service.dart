@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class AuthService {
   // URL API kita di Laragon
-  static const String _baseUrl = 'http://localhost/roti515_api';
+  static const String _baseUrl = 'http://192.168.1.8/roti515_api';
 
   static Future<Map<String, dynamic>> login({
     required String email,
