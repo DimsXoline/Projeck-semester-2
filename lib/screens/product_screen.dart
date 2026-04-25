@@ -35,16 +35,64 @@ class _ProductScreenState extends State<ProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Semua Produk', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-        backgroundColor: AppColors.primary,
-        centerTitle: true,
-        actions: [
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Header: ROTI 515 + Icon Keranjang (tanpa AppBar)
+            _buildHeader(),
+            // Search Bar
+            const CustomSearchBar(),
+            // Grid Produk
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 0.7,
+                  ),
+                  itemCount: _products.length,
+                  itemBuilder: (context, index) {
+                    return ProductCard(
+                      product: _products[index],
+                      onAddToCart: () => _addToCart(_products[index]),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Judul ROTI 515
+          Text(
+            'ROTI 515',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: AppColors.primaryDark,
+              letterSpacing: 2,
+            ),
+          ),
+          // Icon Keranjang dengan badge
           Stack(
             children: [
               IconButton(
                 onPressed: () => showCartDialog(context, _cartCount),
-                icon: const Icon(Icons.shopping_cart_outlined, color: Colors.white),
+                icon: Icon(Icons.shopping_cart_outlined, color: AppColors.primaryDark, size: 24),
               ),
               if (_cartCount > 0)
                 Positioned(
@@ -57,38 +105,13 @@ class _ProductScreenState extends State<ProductScreen> {
                     child: Text(
                       '$_cartCount',
                       style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
             ],
           ),
         ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            const CustomSearchBar(),
-            const SizedBox(height: 16),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                childAspectRatio: 0.7,
-              ),
-              itemCount: _products.length,
-              itemBuilder: (context, index) {
-                return ProductCard(
-                  product: _products[index],
-                  onAddToCart: () => _addToCart(_products[index]),
-                );
-              },
-            ),
-          ],
-        ),
       ),
     );
   }
