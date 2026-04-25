@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
-  // Konstanta Warna sesuai desain Roti 515
   final Color bgKrem = const Color(0xFFFDF7E9);
   final Color coklatTua = const Color(0xFF4A342E);
   final Color coklatMuda = const Color(0xFF8D6E63);
@@ -29,11 +28,8 @@ class ProfileScreen extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 10),
-            // Header Profil (Foto dan Nama)
             _buildProfileHeader(),
             const SizedBox(height: 30),
-            
-            // Bagian Informasi Akun
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -42,32 +38,29 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 15),
-            
-            // Kartu Telepon
             _buildInfoTile(
               icon: Icons.phone_outlined,
               title: 'TELEPON',
               subtitle: '+62 812 3456 7890',
             ),
             const SizedBox(height: 12),
-            
-            // Kartu Alamat
             _buildInfoTile(
               icon: Icons.location_on_outlined,
               title: 'ALAMAT UTAMA',
               subtitle: 'Kauman, Kec. Nganjuk, Kabupaten Nganjuk, Jawa Timur',
             ),
             const SizedBox(height: 12),
-            
-            // Tombol Riwayat Pesanan
             _buildMenuTile(
               icon: Icons.receipt_long_outlined,
               title: 'RIWAYAT PESANAN',
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Fitur riwayat pesanan segera hadir!')),
+                );
+              },
             ),
             const SizedBox(height: 40),
-            
-            // Tombol Keluar dari Akun
-            _buildLogoutButton(),
+            _buildLogoutButton(context),
             const SizedBox(height: 20),
           ],
         ),
@@ -75,7 +68,6 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  // Widget untuk bagian atas (Foto & Nama)
   Widget _buildProfileHeader() {
     return Container(
       width: double.infinity,
@@ -91,7 +83,7 @@ class ProfileScreen extends StatelessWidget {
             children: [
               const CircleAvatar(
                 radius: 50,
-                backgroundImage: AssetImage('assets/images/user_photo.jpg'), // Pastikan file ada di assets
+                child: Icon(Icons.person, size: 50, color: Colors.brown),
               ),
               Container(
                 padding: const EdgeInsets.all(4),
@@ -115,7 +107,6 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  // Widget untuk Item Informasi (Telepon & Alamat)
   Widget _buildInfoTile({required IconData icon, required String title, required String subtitle}) {
     return Container(
       padding: const EdgeInsets.all(15),
@@ -146,36 +137,65 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  // Widget untuk Menu (Riwayat Pesanan)
-  Widget _buildMenuTile({required IconData icon, required String title}) {
-    return Container(
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: kartuKrem,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(color: const Color(0xFFE7DCC8), borderRadius: BorderRadius.circular(12)),
-            child: Icon(icon, color: coklatTua),
-          ),
-          const SizedBox(width: 15),
-          Text(title, style: TextStyle(color: coklatTua, fontSize: 14, fontWeight: FontWeight.bold)),
-          const Spacer(),
-          Icon(Icons.chevron_right, color: coklatMuda),
-        ],
+  Widget _buildMenuTile({required IconData icon, required String title, required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: kartuKrem,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(color: const Color(0xFFE7DCC8), borderRadius: BorderRadius.circular(12)),
+              child: Icon(icon, color: coklatTua),
+            ),
+            const SizedBox(width: 15),
+            Text(title, style: TextStyle(color: coklatTua, fontSize: 14, fontWeight: FontWeight.bold)),
+            const Spacer(),
+            Icon(Icons.chevron_right, color: coklatMuda),
+          ],
+        ),
       ),
     );
   }
 
-  // Widget Tombol Keluar
-  Widget _buildLogoutButton() {
+  // ========== TAMBAHKAN FUNGSI LOGOUT ==========
+  Widget _buildLogoutButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Konfirmasi Keluar'),
+                content: const Text('Apakah Anda yakin ingin keluar dari akun?'),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Batal', style: TextStyle(color: Colors.grey)),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+                    },
+                    style: TextButton.styleFrom(
+                      foregroundColor: merahTeks,
+                    ),
+                    child: const Text('Keluar'),
+                  ),
+                ],
+              );
+            },
+          );
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: pinkKeluar,
           elevation: 0,
@@ -193,4 +213,5 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
+  // ==============================================
 }

@@ -6,60 +6,46 @@
 import '../services/auth_service.dart';
 import 'admin_login_screen.dart';
 import 'register_screen.dart';
-import 'login_success_screen.dart';
-import 'package:flutter/material.dart'; // import library Flutter (wajib di setiap file UI)
-import '../utils/app_colors.dart'; // import warna kustom kita (.. = naik satu folder)
+import 'home_screen.dart';  // ← TAMBAHKAN import ini
+import 'package:flutter/material.dart';
+import '../utils/app_colors.dart';
 
 // CLASS LoginScreen — cetak biru untuk halaman login
-// StatefulWidget = widget yang bisa berubah tampilannya (misal: tab aktif, show/hide password)
 class LoginScreen extends StatefulWidget {
   const LoginScreen({
     super.key,
-  }); // constructor — super.key untuk identitas widget
+  });
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState(); // hubungkan ke "isi" class di bawah
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-// CLASS _LoginScreenState — tempat semua logika dan tampilan ditulis
-// Tanda "_" di depan = private, hanya bisa dipakai di file ini
 class _LoginScreenState extends State<LoginScreen> {
-  // VARIABEL — menyimpan data yang bisa berubah
-  String _selectedRole =
-      'Pelanggan'; // menyimpan tab yang aktif (Pelanggan atau Admin)
-  bool _isPasswordVisible =
-      false; // true = password terlihat, false = tersembunyi
+  String _selectedRole = 'Pelanggan';
+  bool _isPasswordVisible = false;
 
-  // TextEditingController = alat untuk mengambil teks yang diketik user
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  // FUNGSI BUILD — wajib ada, dipanggil Flutter untuk menggambar tampilan
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // kerangka dasar halaman Flutter
-      backgroundColor: AppColors.background, // warna latar belakang krem
+      backgroundColor: AppColors.background,
       body: SafeArea(
-        // hindari area notch/status bar
         child: SingleChildScrollView(
-          // bisa di-scroll jika konten panjang
-          padding: const EdgeInsets.symmetric(
-            horizontal: 24,
-          ), // jarak kiri-kanan 24px
+          padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
-            // susun widget dari atas ke bawah
-            crossAxisAlignment: CrossAxisAlignment.start, // rata kiri
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHeader(), // bagian judul "Roti 515"
-              _buildRoleToggle(), // bagian tab Pelanggan/Admin
-              _buildWelcomeText(), // teks "Selamat Datang"
-              _buildEmailField(), // input email
-              _buildPasswordField(), // input kata sandi
-              _buildLoginButton(), // tombol "Masuk Ke Akun"
-              _buildDivider(), // garis "atau masuk dengan"
-              _buildGoogleButton(), // tombol Google
-              _buildRegisterLink(), // link "Daftar Sekarang"
+              _buildHeader(),
+              _buildRoleToggle(),
+              _buildWelcomeText(),
+              _buildEmailField(),
+              _buildPasswordField(),
+              _buildLoginButton(),
+              _buildDivider(),
+              _buildGoogleButton(),
+              _buildRegisterLink(),
             ],
           ),
         ),
@@ -67,68 +53,48 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // ===================================================
-  // FUNGSI-FUNGSI PEMBUAT BAGIAN UI
-  // Setiap fungsi mengembalikan (return) satu Widget
-  // ===================================================
-
-  // Bagian 1: Header "Roti 515" di atas
   Widget _buildHeader() {
     return Padding(
-      padding: const EdgeInsets.only(
-        top: 32,
-        bottom: 24,
-      ), // jarak atas 32px, bawah 24px
+      padding: const EdgeInsets.only(top: 32, bottom: 24),
       child: Center(
-        // posisikan di tengah
         child: Text(
-          'Roti 515', // teks yang ditampilkan
+          'Roti 515',
           style: TextStyle(
-            fontSize: 20, // ukuran huruf 20px
-            fontWeight: FontWeight.w600, // ketebalan semi-bold
-            color: AppColors.primaryDark, // warna coklat gelap
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: AppColors.primaryDark,
           ),
         ),
       ),
     );
   }
 
-  // Bagian 2: Tab Toggle Pelanggan / Admin
   Widget _buildRoleToggle() {
     return Container(
-      margin: const EdgeInsets.only(bottom: 32), // jarak bawah 32px
-      padding: const EdgeInsets.all(4), // jarak dalam semua sisi 4px
+      margin: const EdgeInsets.only(bottom: 32),
+      padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: AppColors.toggleBg, // warna abu krem
-        borderRadius: BorderRadius.circular(
-          30,
-        ), // sudut sangat membulat (pill shape)
+        color: AppColors.toggleBg,
+        borderRadius: BorderRadius.circular(30),
       ),
       child: Row(
-        // susun tombol kiri ke kanan
         children: [
-          _buildToggleButton('Pelanggan'), // tombol kiri
-          _buildToggleButton('Admin'), // tombol kanan
+          _buildToggleButton('Pelanggan'),
+          _buildToggleButton('Admin'),
         ],
       ),
     );
   }
 
-  // Helper: membuat SATU tombol toggle
-  // Parameter "String label" = menerima teks 'Pelanggan' atau 'Admin'
   Widget _buildToggleButton(String label) {
-    bool isActive =
-        _selectedRole == label; // cek apakah tombol ini sedang aktif
+    bool isActive = _selectedRole == label;
 
     return Expanded(
-      // isi sisa ruang yang tersedia secara merata
       child: GestureDetector(
-        // mendeteksi sentuhan/tap user
         onTap: () {
           setState(() {
             _selectedRole = label;
           });
-          // Jika tap Admin, navigasi ke halaman Admin
           if (label == 'Admin') {
             Navigator.push(
               context,
@@ -137,24 +103,17 @@ class _LoginScreenState extends State<LoginScreen> {
           }
         },
         child: AnimatedContainer(
-          // Container dengan animasi otomatis saat berubah
-          duration: const Duration(
-            milliseconds: 200,
-          ), // animasi selama 0.2 detik
+          duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            // Jika aktif: warna coklat. Jika tidak: transparan
-            // Format: kondisi ? nilai_true : nilai_false
             color: isActive ? AppColors.primary : Colors.transparent,
             borderRadius: BorderRadius.circular(26),
           ),
           child: Text(
-            label, // teks tombol ('Pelanggan' atau 'Admin')
+            label,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: isActive
-                  ? AppColors.white
-                  : AppColors.textHint, // putih jika aktif
+              color: isActive ? AppColors.white : AppColors.textHint,
               fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
             ),
           ),
@@ -163,62 +122,55 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // Bagian 3: Teks "Selamat Datang"
   Widget _buildWelcomeText() {
     return const Padding(
-      padding: EdgeInsets.only(bottom: 24), // jarak bawah 24px
+      padding: EdgeInsets.only(bottom: 24),
       child: Text(
         'Selamat Datang',
         style: TextStyle(
-          fontSize: 28, // ukuran besar
-          fontWeight: FontWeight.bold, // tebal
-          color: Colors.black87, // hitam sedikit transparan
+          fontSize: 28,
+          fontWeight: FontWeight.bold,
+          color: Colors.black87,
         ),
       ),
     );
   }
 
-  // Bagian 4: Input Email
   Widget _buildEmailField() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start, // rata kiri
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Email', style: TextStyle(fontSize: 14)), // label "Email"
-        const SizedBox(height: 8), // jarak 8px
+        const Text('Email', style: TextStyle(fontSize: 14)),
+        const SizedBox(height: 8),
         TextField(
-          controller: _emailController, // hubungkan ke controller
+          controller: _emailController,
           decoration: InputDecoration(
-            hintText: 'nama@email.com', // teks placeholder
+            hintText: 'nama@email.com',
             hintStyle: TextStyle(color: AppColors.textHint),
-            prefixIcon: Icon(
-              Icons.email_outlined, // ikon amplop di kiri
-              color: AppColors.textHint,
-            ),
-            filled: true, // aktifkan warna background
-            fillColor: AppColors.inputBg, // warna background input
+            prefixIcon: Icon(Icons.email_outlined, color: AppColors.textHint),
+            filled: true,
+            fillColor: AppColors.inputBg,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12), // sudut membulat
-              borderSide: BorderSide.none, // hilangkan garis border
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
             ),
           ),
         ),
-        const SizedBox(height: 16), // jarak bawah 16px
+        const SizedBox(height: 16),
       ],
     );
   }
 
-  // Bagian 5: Input Kata Sandi
   Widget _buildPasswordField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment:
-              MainAxisAlignment.spaceBetween, // kiri dan kanan berjauhan
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text('Kata Sandi', style: TextStyle(fontSize: 14)),
             Text(
-              'Lupa Kata Sandi?', // link di kanan
+              'Lupa Kata Sandi?',
               style: TextStyle(fontSize: 14, color: AppColors.textHint),
             ),
           ],
@@ -226,22 +178,17 @@ class _LoginScreenState extends State<LoginScreen> {
         const SizedBox(height: 8),
         TextField(
           controller: _passwordController,
-          obscureText:
-              !_isPasswordVisible, // true = sembunyikan teks (jadi titik-titik)
+          obscureText: !_isPasswordVisible,
           decoration: InputDecoration(
             hintText: '••••••••',
             prefixIcon: Icon(Icons.lock_outline, color: AppColors.textHint),
             suffixIcon: GestureDetector(
-              // ikon mata di kanan, bisa diklik
               onTap: () {
                 setState(() {
-                  // "!" artinya membalik nilai boolean
-                  // false jadi true, true jadi false
                   _isPasswordVisible = !_isPasswordVisible;
                 });
               },
               child: Icon(
-                // Tampilkan ikon mata terbuka atau tertutup sesuai kondisi
                 _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
                 color: AppColors.textHint,
               ),
@@ -259,44 +206,37 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // Bagian 6: Tombol "Masuk Ke Akun"
+  // ========== HANYA BAGIAN INI YANG DIUPDATE ==========
   Widget _buildLoginButton() {
     return SizedBox(
-      width: double.infinity, // lebar penuh mengikuti layar
+      width: double.infinity,
       child: ElevatedButton(
         onPressed: () async {
-          // Ambil teks yang diketik user
-          String email = _emailController.text;
+          String email = _emailController.text.trim();
           String password = _passwordController.text;
 
-          // Validasi — jangan sampai kosong
           if (email.isEmpty || password.isEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Email dan password wajib diisi!')),
             );
-            return; // berhenti di sini, jangan lanjut
+            return;
           }
 
-          // Panggil API login
           final result = await AuthService.login(
             email: email,
             password: password,
           );
 
-          // Cek hasilnya
           if (result['success'] == true) {
-            // Berhasil → pindah ke halaman sukses
+            // Login berhasil → langsung ke HomeScreen
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(
-                builder: (context) => const LoginSuccessScreen(),
-              ),
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
             );
           } else {
-            // Gagal → tampilkan pesan error
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(result['message'])));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(result['message'])),
+            );
           }
         },
         style: ElevatedButton.styleFrom(
@@ -320,14 +260,14 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+  // ==================================================
 
-  // Bagian 7: Garis pemisah "atau masuk dengan"
   Widget _buildDivider() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: Row(
         children: [
-          Expanded(child: Divider(color: AppColors.textHint)), // garis kiri
+          Expanded(child: Divider(color: AppColors.textHint)),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Text(
@@ -335,22 +275,17 @@ class _LoginScreenState extends State<LoginScreen> {
               style: TextStyle(color: AppColors.textHint, fontSize: 13),
             ),
           ),
-          Expanded(child: Divider(color: AppColors.textHint)), // garis kanan
+          Expanded(child: Divider(color: AppColors.textHint)),
         ],
       ),
     );
   }
 
-  // Bagian 8: Tombol Google
   Widget _buildGoogleButton() {
     return Center(
       child: OutlinedButton.icon(
-        // tombol dengan ikon + teks
         onPressed: () {},
-        icon: const Icon(
-          Icons.g_mobiledata,
-          size: 24,
-        ), // ikon Google (sementara)
+        icon: const Icon(Icons.g_mobiledata, size: 24),
         label: const Text('Google'),
         style: OutlinedButton.styleFrom(
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
@@ -362,15 +297,14 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // Bagian 9: Link "Belum punya akun? Daftar Sekarang"
   Widget _buildRegisterLink() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 24),
       child: Center(
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center, // posisi tengah
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Belum punya akun? '), // teks biasa
+            const Text('Belum punya akun? '),
             GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -383,7 +317,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Text(
                 'Daftar Sekarang',
                 style: TextStyle(
-                  color: AppColors.primary, // warna coklat
+                  color: AppColors.primary,
                   fontWeight: FontWeight.bold,
                 ),
               ),

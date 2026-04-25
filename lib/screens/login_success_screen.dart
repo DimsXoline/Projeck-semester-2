@@ -5,7 +5,7 @@
 
 import 'package:flutter/material.dart';
 import '../utils/app_colors.dart';
-import 'home_screen.dart';
+import 'home_screen.dart';  // ← TAMBAHKAN import
 
 class LoginSuccessScreen extends StatelessWidget {
   const LoginSuccessScreen({super.key});
@@ -13,22 +13,21 @@ class LoginSuccessScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background, // warna latar krem
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
           child: Column(
-            mainAxisAlignment:
-                MainAxisAlignment.center, // posisi tengah vertikal
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Spacer(), // mendorong konten ke tengah
-              _buildLogo(), // lingkaran logo + badge centang
+              const Spacer(),
+              _buildLogo(),
               const SizedBox(height: 40),
-              _buildWelcomeText(), // teks "Selamat Datang Kembali!"
+              _buildWelcomeText(),
               const SizedBox(height: 16),
-              _buildSubtitle(), // teks keterangan
-              const Spacer(), // mendorong tombol ke bawah
-              _buildContinueButton(context), // tombol "Lanjut ke Aplikasi"
+              _buildSubtitle(),
+              const Spacer(),
+              _buildContinueButton(context),
               const SizedBox(height: 40),
             ],
           ),
@@ -37,22 +36,19 @@ class LoginSuccessScreen extends StatelessWidget {
     );
   }
 
-  // Bagian 1: Logo bulat + badge centang oranye
   Widget _buildLogo() {
     return Stack(
-      // Stack = tumpuk widget di atas widget lain
-      clipBehavior: Clip.none, // izinkan child keluar dari batas Stack
+      clipBehavior: Clip.none,
       children: [
-        // Lingkaran putih besar (background logo)
         Container(
           width: 140,
           height: 140,
           decoration: BoxDecoration(
-            color: Colors.white, // warna putih
-            shape: BoxShape.circle, // bentuk lingkaran
+            color: Colors.white,
+            shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.08), // bayangan halus
+                color: Colors.black.withOpacity(0.08),
                 blurRadius: 20,
                 offset: const Offset(0, 4),
               ),
@@ -62,15 +58,10 @@ class LoginSuccessScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Ikon roti (menggunakan emoji sebagai placeholder)
-                // Nanti bisa diganti dengan gambar asli dari assets
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFB8952A), // warna emas/kuning
+                    color: const Color(0xFFB8952A),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Text(
@@ -84,30 +75,27 @@ class LoginSuccessScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                // Ikon roti di bawah label
                 const Icon(
-                  Icons.bakery_dining, // ikon roti dari Flutter
+                  Icons.bakery_dining,
                   size: 36,
-                  color: Color(0xFFB8952A), // warna emas
+                  color: Color(0xFFB8952A),
                 ),
               ],
             ),
           ),
         ),
-
-        // Badge centang oranye di pojok kanan bawah lingkaran
         Positioned(
-          bottom: 0, // posisi dari bawah
-          right: -4, // posisi dari kanan (sedikit keluar)
+          bottom: 0,
+          right: -4,
           child: Container(
             width: 36,
             height: 36,
             decoration: const BoxDecoration(
-              color: Color(0xFFFF8C42), // warna oranye
+              color: Color(0xFFFF8C42),
               shape: BoxShape.circle,
             ),
             child: const Icon(
-              Icons.check, // ikon centang
+              Icons.check,
               color: Colors.white,
               size: 20,
             ),
@@ -117,46 +105,45 @@ class LoginSuccessScreen extends StatelessWidget {
     );
   }
 
-  // Bagian 2: Teks "Selamat Datang Kembali!"
   Widget _buildWelcomeText() {
     return const Text(
-      'Selamat Datang\nKembali!', // "\n" = pindah baris
+      'Selamat Datang\nKembali!',
       textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: 32,
         fontWeight: FontWeight.bold,
         color: Colors.black87,
-        height: 1.2, // jarak antar baris
+        height: 1.2,
       ),
     );
   }
 
-  // Bagian 3: Teks keterangan
   Widget _buildSubtitle() {
     return Text(
       'Aroma roti hangat sudah menunggu.\nLogin Anda berhasil dan sesi Anda telah\ndisiapkan dengan sempurna.',
       textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: 14,
-        color: AppColors.textHint, // warna abu
-        height: 1.6, // jarak antar baris
+        color: AppColors.textHint,
+        height: 1.6,
       ),
     );
   }
 
-  // Bagian 4: Tombol "Lanjut ke Aplikasi"
+  // ========== HANYA BAGIAN INI YANG DIUPDATE ==========
   Widget _buildContinueButton(BuildContext context) {
     return SizedBox(
-      width: double.infinity, // lebar penuh
+      width: double.infinity,
       child: ElevatedButton.icon(
         onPressed: () {
+          // Ganti navigasi ke HomeScreen
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const HomeScreen()),
           );
         },
         icon: const Icon(
-          Icons.arrow_forward, // ikon panah ke kanan
+          Icons.arrow_forward,
           color: Colors.white,
         ),
         label: const Text(
@@ -168,13 +155,14 @@ class LoginSuccessScreen extends StatelessWidget {
           ),
         ),
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary, // warna coklat
+          backgroundColor: AppColors.primary,
           padding: const EdgeInsets.symmetric(vertical: 18),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30), // sangat membulat
+            borderRadius: BorderRadius.circular(30),
           ),
         ),
       ),
     );
   }
+  // ==================================================
 }
