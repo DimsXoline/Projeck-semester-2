@@ -1,14 +1,9 @@
-// ===================================================
-// FILE: lib/screens/login_screen.dart
-// Halaman Login untuk App Roti 515
-// ===================================================
-
-import '../services/auth_service.dart';
+import '../../services/auth_service.dart';
 import 'admin_login_screen.dart';
 import 'register_screen.dart';
-import 'home_screen.dart';  // ← TAMBAHKAN import ini
+import '../home/home_screen.dart';  // ← TAMBAHKAN import ini
 import 'package:flutter/material.dart';
-import '../utils/app_colors.dart';
+import '../../utils/app_colors.dart';
 
 // CLASS LoginScreen — cetak biru untuk halaman login
 class LoginScreen extends StatefulWidget {

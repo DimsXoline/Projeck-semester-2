@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../models/product.dart';
-import '../widgets/product_card.dart';
-import '../widgets/custom_search_bar.dart';
-import '../widgets/cart_dialog.dart';
-import '../utils/app_colors.dart';
+import '../../models/product.dart';
+import '../../widgets/product_card.dart';
+import '../../widgets/custom_search_bar.dart';
+import '../../utils/app_colors.dart';
+import '../checkout/checkout_screen.dart';
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({super.key});
@@ -15,6 +15,7 @@ class ProductScreen extends StatefulWidget {
 class _ProductScreenState extends State<ProductScreen> {
   List<Product> _products = [];
   int _cartCount = 0;
+  List<Product> _cartItems = [];
 
   @override
   void initState() {
@@ -25,6 +26,7 @@ class _ProductScreenState extends State<ProductScreen> {
   void _addToCart(Product product) {
     setState(() {
       _cartCount++;
+      _cartItems.add(product);
     });
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('${product.nama} ditambahkan'), duration: const Duration(seconds: 1)),
@@ -38,11 +40,8 @@ class _ProductScreenState extends State<ProductScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // Header: ROTI 515 + Icon Keranjang (tanpa AppBar)
             _buildHeader(),
-            // Search Bar
             const CustomSearchBar(),
-            // Grid Produk
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
@@ -72,12 +71,13 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   Widget _buildHeader() {
+    int totalPrice = _cartItems.fold(0, (sum, item) => sum + item.harga.toInt());
+    
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Judul ROTI 515
           Text(
             'ROTI 515',
             style: TextStyle(
@@ -87,11 +87,26 @@ class _ProductScreenState extends State<ProductScreen> {
               letterSpacing: 2,
             ),
           ),
-          // Icon Keranjang dengan badge
           Stack(
             children: [
               IconButton(
-                onPressed: () => showCartDialog(context, _cartCount),
+                onPressed: () {
+                  if (_cartItems.isNotEmpty) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CheckoutScreen(
+                          cartItems: _cartItems,
+                          totalAmount: totalPrice,
+                        ),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Keranjang belanja masih kosong')),
+                    );
+                  }
+                },
                 icon: Icon(Icons.shopping_cart_outlined, color: AppColors.primaryDark, size: 24),
               ),
               if (_cartCount > 0)

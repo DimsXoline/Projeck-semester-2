@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import '../models/product.dart';
-import '../widgets/product_card.dart';
-import '../widgets/cart_fab.dart';
-import '../widgets/custom_search_bar.dart';
-import '../widgets/section_title.dart';
-import '../widgets/cart_dialog.dart';
-import '../utils/app_colors.dart';
+import '../../models/product.dart';
+import '../../widgets/product_card.dart';
+import '../../widgets/cart_fab.dart';
+import '../../widgets/custom_search_bar.dart';
+import '../../widgets/section_title.dart';
+import '../../utils/app_colors.dart';
 import 'product_screen.dart';
-import 'profile_screen.dart';
+import '../profile/profile_screen.dart';
+import '../checkout/checkout_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -61,6 +61,7 @@ class _HomeContentState extends State<HomeContent> {
   List<Product> _products = [];
   bool _isLoading = true;
   int _cartCount = 0;
+  List<Product> _cartItems = [];
 
   @override
   void initState() {
@@ -78,6 +79,7 @@ class _HomeContentState extends State<HomeContent> {
   void _addToCart(Product product) {
     setState(() {
       _cartCount++;
+      _cartItems.add(product);
     });
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('${product.nama} ditambahkan'), duration: const Duration(seconds: 1)),
@@ -86,6 +88,8 @@ class _HomeContentState extends State<HomeContent> {
 
   @override
   Widget build(BuildContext context) {
+    int totalPrice = _cartItems.fold(0, (sum, item) => sum + item.harga.toInt());
+    
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -113,23 +117,42 @@ class _HomeContentState extends State<HomeContent> {
           ),
         ),
       ),
-      floatingActionButton: CartFab(itemCount: _cartCount, onTap: () => showCartDialog(context, _cartCount)),
+      floatingActionButton: CartFab(
+        itemCount: _cartCount,
+        onTap: () {
+          if (_cartItems.isNotEmpty) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CheckoutScreen(
+                  cartItems: _cartItems,
+                  totalAmount: totalPrice,
+                ),
+              ),
+            );
+          }
+        },
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
-
   Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text('ROTI 515', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryDark, letterSpacing: 2)),
-          Icon(Icons.notifications_none_outlined, color: AppColors.primaryDark),
-        ],
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+    child: Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        'ROTI 515',
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: AppColors.primaryDark,
+          letterSpacing: 2,
+        ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildBanner() {
     return Container(

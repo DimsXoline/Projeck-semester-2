@@ -4,8 +4,8 @@
 // ===================================================
 
 import 'package:flutter/material.dart';
-import '../utils/app_colors.dart';
-import 'home_screen.dart';  // ← TAMBAHKAN import
+import '../../utils/app_colors.dart';
+import '../home/home_screen.dart';  // ← TAMBAHKAN import
 
 class LoginSuccessScreen extends StatelessWidget {
   const LoginSuccessScreen({super.key});
